@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+    <title>吕权的个人网站</title>
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.chunks['vendor']['css']%>">
+    <link rel="stylesheet" href="<%= htmlWebpackPlugin.files.chunks['root']['css']%>">
+</head>
+<body>
+    <div id="root-container"></div>
+    <script src="<%= htmlWebpackPlugin.files.chunks['vendor']['entry']%>"></script>
+    <script src="<%= htmlWebpackPlugin.files.chunks['root']['entry']%>"></script>
+</body>
+</html>

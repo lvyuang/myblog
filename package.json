@@ -1,0 +1,168 @@
+{
+  "name": "myblog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:production": "NODE_ENV=production webpack"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.13.2",
+    "babel-eslint": "^6.1.2",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-object-rest-spread": "^6.8.0",
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "body-parser": "^1.15.2",
+    "clean-webpack-plugin": "^0.1.10",
+    "css-loader": "^0.23.1",
+    "eslint": "^3.3.1",
+    "eslint-loader": "^1.5.0",
+    "eslint-plugin-react": "^6.1.2",
+    "express": "^4.14.0",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.9.0",
+    "html-webpack-plugin": "^2.22.0",
+    "isomorphic-fetch": "^2.2.1",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "nodemon": "^1.10.0",
+    "react-hot-loader": "^1.3.0",
+    "react-router": "^2.6.1",
+    "rimraf": "^2.5.4",
+    "ssh2": "^0.5.0",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1",
+    "webpack-merge": "^0.14.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.13.0",
+    "normalize.css": "^4.2.0",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "react-redux": "^4.4.5",
+    "redux": "^3.5.2",
+    "redux-thunk": "^2.1.0"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "react"
+    ],
+    "plugins": [
+      "transform-object-rest-spread",
+      "babel-plugin-transform-decorators-legacy"
+    ]
+  },
+  "eslintConfig": {
+    "rules": {
+      "strict": 0,
+      "indent": [
+        2,
+        4,
+        {
+          "SwitchCase": 1
+        }
+      ],
+      "quotes": [
+        2,
+        "single"
+      ],
+      "linebreak-style": [
+        2,
+        "unix"
+      ],
+      "semi": [
+        2,
+        "always"
+      ],
+      "no-undef": [
+        0
+      ],
+      "no-unused-vars": [
+        0
+      ],
+      "no-console": [
+        0
+      ],
+      "comma-dangle": [
+        2
+      ],
+      "no-cond-assign": [
+        2
+      ],
+      "no-dupe-args": [
+        2
+      ],
+      "no-dupe-keys": [
+        2
+      ],
+      "no-duplicate-case": [
+        2
+      ],
+      "no-empty": [
+        2
+      ],
+      "no-inner-declarations": [
+        2,
+        "both"
+      ],
+      "no-irregular-whitespace": [
+        2
+      ],
+      "no-unexpected-multiline": [
+        2
+      ],
+      "no-unreachable": [
+        1
+      ],
+      "no-debugger": [
+        1
+      ],
+      "valid-typeof": [
+        2
+      ],
+      "curly": [
+        2
+      ],
+      "no-constant-condition": [
+        1
+      ],
+      "react/display-name": [
+        0
+      ],
+      "react/jsx-indent": [
+        2,
+        4
+      ],
+      "react/prop-types": [
+        0
+      ],
+      "react/no-danger": [
+        0
+      ]
+    },
+    "extends": [
+      "eslint:recommended",
+      "plugin:react/recommended"
+    ],
+    "plugins": [
+      "react"
+    ],
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaVersion": 7,
+      "sourceType": "module",
+      "ecmaFeatures": {
+        "jsx": true
+      }
+    }
+  }
+}

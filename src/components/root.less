@@ -1,0 +1,65 @@
+@import '../../node_modules/normalize.css/normalize.css';
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+}
+
+html {
+    font-size: 14px;
+    font-family: Tahoma, Arial, Helvetica, STXihei, "华文细黑", "Microsoft YaHei New", "Microsoft Yahei", "微软雅黑", SimSun, "宋体", sans-serif;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+p {
+    padding: 0;
+    margin: 0;
+}
+
+/**
+    指定placeholder默认样式
+ */
+::-webkit-input-placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+}
+
+/* Firefox 18- */
+:-moz-placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+}
+
+/* Firefox 19+ */
+::-moz-placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+}
+
+/* Firefox 19+ */
+:-ms-input-placeholder {
+    color: #BDBDBD;
+    opacity: 1;
+}
+
+// 隐藏input[type=number]的按钮
+input[type='number'] {
+    -moz-appearance: textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+input[type='text'],
+input[type='number'],
+input[type='password'],
+textarea {
+    border-radius: 0;
+    outline: none;
+}
