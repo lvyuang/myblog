@@ -1,4 +1,4 @@
-import './home.less';
+import './category.less';
 
 import React from 'react';
 import TemplateMain from 'templates/main';
@@ -9,20 +9,23 @@ import ajax from 'utils/ajax.js';
 @connect(
     state => {
         return {
-            articleList: state.home.articleList
+            articleList: state.category.articleList
         };
     }
 )
-class Index extends React.Component {
-    componentDidMount() {
-        const {dispatch} = this.props;
+class Category extends React.Component {
+    componentWillMount() {
+        const {dispatch, params} = this.props;
 
         ajax({
             url: '/api/article/list',
-            method: 'get'
+            method: 'get',
+            params: {
+                category: params.name
+            }
         }).then(result => {
             dispatch({
-                type: 'ARTICLE-LIST-GET',
+                type: 'ARTICLE-LIST-CATEGORY-GET',
                 articleList: result
             });
         }).catch(err => {
@@ -35,10 +38,16 @@ class Index extends React.Component {
     render() {
         const {articleList} = this.props;
 
-        return <TemplateMain id="home" className="home">
+        return <TemplateMain id="category" className="category">
+            <div className="category-title-container">
+                <div className="category-title">
+                    <li className="fa fa-hashtag"></li>
+                    {this.props.params.name}
+                </div>
+            </div>
             <ArticleList data={articleList}></ArticleList>
         </TemplateMain>;
     }
 }
 
-export default Index;
+export default Category;

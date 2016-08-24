@@ -5,34 +5,12 @@ const encodeRequestParams = (params) => {
         return null;
     }
 
-    return Object
-        .keys(params)
-        .reduce((next, key) => {
-            if (params[key] === null || params[key] === undefined) {
-                return next;
-            }
-
-            if (next.length > 0) {
-                next.push('&');
-            }
-
-            next.push(encodeURIComponent(key) + '=' + encodeURIComponent(
-                Array.isArray(params[key]) ? JSON.stringify(params[key]) : params[key]
-            ));
-
-            return next;
-        }, [])
-        .join('')
-        .replace(/%20/g, '+');
+    return 'data=' + encodeURIComponent(JSON.stringify(params));
 };
 
-const createErrorObject = (params) => {
-    const err = new Error();
-    err.status = params.status;
-    err.statusText = params.statusText;
-    err.headers = params.headers;
-    err.url = params.url;
-    err.message = params.statusText;
+const createErrorObject = (name, message) => {
+    const err = new Error(message);
+    err.name = name;
 
     return err;
 };
@@ -52,14 +30,8 @@ export default (options) => {
                 credentials: 'same-origin'
             }
         ).then(res => {
-            if (res.status >= 400) {
-                throw createErrorObject({
-                    status: res.status,
-                    statusText: res.statusText,
-                    headers: res.headers,
-                    url: res.url,
-                    message: res.message
-                });
+            if (res.error) {
+                throw createErrorObject(res.error.name, res.error.message);
             }
             else {
                 return res.json();
@@ -71,14 +43,8 @@ export default (options) => {
             method: method.toUpperCase(),
             credentials: 'same-origin'
         }).then(res => {
-            if (res.status >= 400) {
-                throw createErrorObject({
-                    status: res.status,
-                    statusText: res.statusText,
-                    headers: res.headers,
-                    url: res.url,
-                    message: res.message
-                });
+            if (res.error) {
+                throw createErrorObject(res.error.name, res.error.message);
             }
             else {
                 return res.json();

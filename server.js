@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const WebpackDevServer = require('webpack-dev-server');
 const webpackConfig = require('./webpack.config.js');
 const routes = require('./routes/root.js');
-const bodyParser = require('body-parser');
 
 const host = 'localhost';
 const port = 3000;
@@ -36,10 +35,6 @@ const server = new WebpackDevServer(compiler, {
     },
     colors: true,
     setup: function (app) {
-        // 解析post请求
-        app.use(bodyParser.json({limit: '25mb'}));
-        app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
-
         // 路由管理
         routes(app);
     },

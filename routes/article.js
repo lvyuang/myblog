@@ -7,7 +7,8 @@ const data = require('./data');
     GET: /api/article/list
     PARAMS:
         [startIndex]: {Number}, // 起始位置，默认0
-        [length]: {Number} // 长度，默认10
+        [length]: {Number}, // 长度，默认10
+        [category]: {String} // 目录，默认为null
     RETURNS:
         [
             {
@@ -17,53 +18,49 @@ const data = require('./data');
                 comments: {Number},
                 desc: {String},
                 url: {String},
-                tags: [{String}]
+                categories: [{id: {String}, name: {String}}]
             }
         ]
  */
 router.get('/api/article/list', (req, res) => {
-    res.json({
-        ok: true
+    const params = req.query.data && JSON.parse(req.query.data) || {};
+    const {startIndex, length, category} = params;
+
+    data.article.list(startIndex, length, category, (err, result) => {
+        if (err) {
+            res.json(err);
+            return;
+        }
+
+        res.json(result);
     });
 });
 
 /**
-    获取文章
-    GET: /api/article
+    获取文章元数据
+    GET: /api/article/info
     PARAMS:
         articleId: {Number}
     RETURNS:
         {
             title: {String},
             content: {String},
+            comments: {Number},
             createTime: {Timestamp},
-            tags: [{String}]
+            categories: [{id: {String}, name: {String}}]
         }
  */
-router.get('/api/article', (req, res) => {
-    res.json({
-        ok: true
-    });
-});
+router.get('/api/article/info', (req, res) => {
+    const params = JSON.parse(req.query.data);
+    const {articleId} = params;
 
-/**
-    发表文章
-    POST: /api/article
-    PARAMS:
-        author: {String}, // 目前只取值'lvquan'
-        createTime: {Timestamp},
-        title: {String},
-        content: {String},
-        desc: {String},
-        tags: [{String}]
-    RETURNS:
-        {
-            ok: true
+    data.article.info(articleId, (err, result) => {
+        if (err) {
+            res.json(err);
+            return;
         }
- */
-router.post('/api/article', (req, res) => {
-    res.json({
-        ok: true
+
+        res.json(result);
     });
 });
 
@@ -77,10 +74,9 @@ router.post('/api/article', (req, res) => {
             {
                 commentId: {Number},
                 user: {String},
-                email: {String},
                 createTime: {Timestamp},
                 content: {String},
-                [quote]: {
+                [quotation]: {
                     user: {String},
                     content: {String}
                 }
@@ -88,8 +84,33 @@ router.post('/api/article', (req, res) => {
         ]
  */
 router.get('/api/article/comments', (req, res) => {
-    res.json({
-        ok: true
+    // const data = [
+    //     {
+    //         commentId: 0,
+    //         user: '用户A',
+    //         createTime: 1471842740906,
+    //         content: '我是评论我是评论我是评论我是评论我是评论我是评论我是评论',
+    //         quotation: {
+    //             user: '用户B',
+    //             content: '我是引用我是引用我是引用我是引用我是引用'
+    //         }
+    //     },
+    //     {
+    //         commentId: 1,
+    //         user: '用户C',
+    //         createTime: 1471842740906,
+    //         content: '我是评论我是评论我是评论我是评论我是评论我是评论我是评论'
+    //     }
+    // ];
+    const params = JSON.parse(req.query.data);
+
+    data.comment.list(params.articleId, (err, result) => {
+        if (err) {
+            res.json(err);
+            return;
+        }
+
+        res.json(result);
     });
 });
 
@@ -99,10 +120,9 @@ router.get('/api/article/comments', (req, res) => {
     PARAMS:
         articleId: {Number},
         user: {String},
-        email: {String},
         content: {String},
         createTime: {Timestamp},
-        [quote]: {
+        [quotation]: {
             user: {String},
             content: {String}
         }
@@ -112,8 +132,18 @@ router.get('/api/article/comments', (req, res) => {
         }
  */
 router.post('/api/article/comment', (req, res) => {
-    res.json({
-        method: 'post'
+    const params = JSON.parse(req.body.data);
+    const {articleId, user, createTime, content, quotation} = params;
+
+    data.comment.post(articleId, user, createTime, content, quotation, (err) => {
+        if (err) {
+            res.json(err);
+            return;
+        }
+
+        res.json({
+            ok: true
+        });
     });
 });
 

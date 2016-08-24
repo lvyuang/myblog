@@ -6,7 +6,6 @@ import Provider from 'react-redux/lib/components/Provider.js';
 
 import storeManager from 'core/store-manager.js';
 import Root from './components/root.jsx';
-import Home from './components/home/home.jsx';
 
 // reducer
 const reducer = (state = {}, action) => {
@@ -23,12 +22,15 @@ const route = {
     getChildRoutes(nextState, cb) {
         require.ensure([], (require) => {
             cb(null, [
-                require('./components/rules').default
+                require('./components/category').default,
+                require('./components/articles').default
             ]);
         });
     },
-    indexRoute: {
-        component: Home
+    getIndexRoute(partialNextState, cb) {
+        require.ensure([], (require) => {
+            cb(null, require('./components/home').default);
+        });
     }
 };
 

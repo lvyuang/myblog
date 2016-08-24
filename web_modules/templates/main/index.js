@@ -1,12 +1,20 @@
 import './main.less';
 import React from 'react';
+import Link from 'react-router/lib/Link.js';
 
 export default (props) =>
     <div id={props.id || null} className={props.className ? `${props.className} template-main` : 'template-main'}>
         <header>
             <div className="container">
-                <h1>吕权的个人网站</h1>
-                <h2>人生就是一场修行</h2>
+                <div className="title">
+                    <Link to="/">
+                        <li className="fa fa-envira"></li>
+                        吕权的个人网站
+                    </Link>
+                </div>
+                <div className="subtitle">
+                    人生就是一次修行
+                </div>
             </div>
         </header>
         <div className="body container">

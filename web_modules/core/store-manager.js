@@ -1,5 +1,4 @@
-import {applyMiddleware, combineReducers, createStore} from 'redux';
-import thunk from 'redux-thunk';
+import {combineReducers, createStore} from 'redux';
 
 let state;
 let store;
@@ -11,14 +10,17 @@ const initStore = (key, reducer) => {
 
     store = createStore(
         combineReducers(state),
-        {},
-        applyMiddleware(thunk)
+        {}
     );
 
     return store;
 };
 
 const updateStore = (key, reducer) => {
+    if (state.key) {
+        return;
+    }
+
     state[key] = reducer;
 
     store.replaceReducer(combineReducers(state));

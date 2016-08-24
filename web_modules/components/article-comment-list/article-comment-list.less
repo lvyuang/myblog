@@ -1,0 +1,159 @@
+.border(@padding: 30px 40px, @margin: 0 0 30px 0) {
+    border: 1px solid rgba(0, 0, 0, 0.09);
+    border-radius: 3px;
+    padding: @padding;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+    background-color: #fff;
+    margin: @margin;
+}
+
+.article-comment-list {
+    max-width: 600px;
+    position: relative;
+    margin: 0 auto 30px;
+    padding: 0 15px;
+    color: rgba(0, 0, 0, 0.8);
+
+    a {
+        color: rgba(0, 0, 0, 0.8);
+    }
+
+    .title {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+
+    .post {
+        .border();
+
+        > .user, .quotation, .response {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            margin-bottom: 20px;
+
+            > li {
+                display: table-cell;
+                width: 2rem;
+            }
+
+            > input {
+                border-width: 0;
+                border-bottom: 1px solid #aaa;
+                display: table-cell;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 5px;
+            }
+
+            > textarea {
+                border-width: 0;
+                border-bottom: 1px solid #aaa;
+                display: table-cell;
+                width: 100%;
+                resize: none;
+                box-sizing: border-box;
+            }
+        }
+
+        > .user {
+            > li {
+                vertical-align: middle;
+            }
+        }
+
+        > .quotation {
+            > li {
+                vertical-align: top;
+            }
+
+            .user {
+                margin-top: 10px;
+            }
+        }
+
+        > .response {
+            > li {
+                vertical-align: top;
+                position: relative;
+                top: 2px;
+            }
+        }
+
+        > .quotation {
+            > span {
+                .border(15px);
+                display: table-cell;
+                width: 100%;
+                box-sizing: border-box;
+                position: relative;
+                line-height: 1.5em;
+
+                > li {
+                    margin: 0 5px;
+                }
+
+                a {
+                    position: absolute;
+                    right: 3px;
+                    top: 5px;
+                }
+            }
+        }
+
+        .submit {
+            text-align: right;
+
+            a {
+                height: 36px;
+                line-height: 36px;
+                padding: 0 15px;
+                border: 1px solid rgba(0, 0, 0, 0.6);
+                border-radius: 18px;
+                display: inline-block;
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.6);
+                    color: white;
+                }
+            }
+        }
+    }
+
+    .comments {
+        margin-bottom: 50px;
+
+        .comment {
+            .border();
+
+            .quotation {
+                .border(20px, 0 0 20px 0);
+                color: rgba(0, 0, 0, 0.439216);
+
+                .user {
+                    margin-top: 20px;
+                }
+            }
+
+            .content {
+                margin-bottom: 20px;
+            }
+
+            .byline {
+                color: rgba(0, 0, 0, 0.439216);
+
+                span {
+                    margin-right: 1rem;
+                }
+
+                a {
+                    color: rgba(0, 0, 0, 0.439216);
+
+                    &:hover {
+                        color: #00ab6b;
+                    }
+                }
+            }
+        }
+    }
+}

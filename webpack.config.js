@@ -42,6 +42,14 @@ let config = {
                 test: /\.(png|jpg|jpeg|gif)$/,
                 exclude: /node_modules/,
                 loader: 'url?limit=1'
+            },
+            {
+                test: /\.woff(2)?(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'url?limit=10000&mimetype=application/font-woff'
+            },
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: 'file'
             }
         ]
     },
@@ -83,6 +91,11 @@ if (env === 'production') {
             test: /\.jsx?$/,
             exclude: /node_modules/,
             loader: 'babel'
+        },
+        {
+            test: /\.js$/,
+            include: /routes/,
+            loader: 'express-hot'
         },
         {
             test: /\.less$/,
