@@ -1,4 +1,5 @@
 import './article.less';
+
 import React from 'react';
 import Link from 'react-router/lib/Link.js';
 import ArticleCommentList from 'components/article-comment-list';
@@ -110,9 +111,7 @@ class TemplateArticle extends React.Component {
                         </Link>
                     )}
                 </div>
-                <div className="content">
-                    {props.children}
-                </div>
+                <div className="content" dangerouslySetInnerHTML={{__html: props.content}}></div>
                 <ArticleCommentList articleId={articleId}/>
             </div>
             <footer>

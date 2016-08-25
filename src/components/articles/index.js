@@ -67,7 +67,7 @@ export default {
             storeManager.updateStore('article', reducer);
 
             cb(null, [
-                require('./2016-8/my-first-article').default
+                require('./2016-8/opening').default
             ]);
         });
     }

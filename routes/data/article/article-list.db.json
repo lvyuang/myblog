@@ -1,31 +1,16 @@
 [
     {
-        "articleId": "my-first-article",
-        "title": "My first article",
-        "subtitle": "我的文章之旅",
-        "createTime": 1471875499450,
-        "desc": "第一篇文章",
-        "url": "2016/8/21/my-first-article",
-        "comments": 22,
+        "articleId": "opening",
+        "title": "开篇",
+        "subtitle": "SPA建站之旅",
+        "createTime": 1472045044087,
+        "desc": "一直想做一个个人博客，除了想写点东西的冲动外，也可以熟悉一下目前比较流行的技术...",
+        "url": "2016/8/24/opening",
+        "comments": 0,
         "categories": [
             {
-                "id": "basics",
-                "name": "基础力学"
-            }
-        ]
-    },
-    {
-        "articleId": "my-second-article",
-        "title": "My second article",
-        "subtitle": "我的文章之旅",
-        "createTime": 1471875499450,
-        "desc": "第一篇文章",
-        "url": "2016/8/21/my-second-article",
-        "comments": 10,
-        "categories": [
-            {
-                "id": "advanced",
-                "name": "高级数学"
+                "id": "SPA",
+                "name": "SPA"
             }
         ]
     }

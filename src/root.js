@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Router from 'react-router/lib/Router.js';
-import hashHistory from 'react-router/lib/hashHistory.js';
+import browserHistory from 'react-router/lib/browserHistory.js';
 import Provider from 'react-redux/lib/components/Provider.js';
 
 import storeManager from 'core/store-manager.js';
@@ -39,7 +39,7 @@ const store = storeManager.initStore('root', reducer);
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={hashHistory} onUpdate={() => window.scrollTo(0, 0)} routes={route}></Router>
+        <Router history={browserHistory} onUpdate={() => window.scrollTo(0, 0)} routes={route}></Router>
     </Provider>,
     document.getElementById('root-container')
 );

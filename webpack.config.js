@@ -7,7 +7,6 @@ const package = require('./package.json');
 const merge = require('webpack-merge');
 
 const env = process.env.NODE_ENV || 'dev';
-const sandbox = process.env.NODE_ENV_SANDBOX || 'false';
 
 let config = {
     entry: {
@@ -55,7 +54,6 @@ let config = {
     },
     plugins: [
         new CleanWebpackPlugin(['build']),
-        new CleanWebpackPlugin(['release']),
         new webpack.optimize.CommonsChunkPlugin({
             name: ['vendor']
         }),
@@ -63,6 +61,9 @@ let config = {
             template: path.resolve(process.cwd(), 'root.html'),
             filename: 'index.html',
             inject: false
+        }),
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify(env)
         })
     ]
 };
@@ -70,8 +71,8 @@ let config = {
 if (env === 'production') {
     config = merge(config, {
         output: {
-            path: path.resolve(process.cwd(), './release'),
-            publicPath: sandbox === 'true' ? '/' : '/'
+            path: path.resolve(process.cwd(), './build'),
+            publicPath: '/'
         },
         plugins: [
             new ExtractTextPlugin('[name].[chunkhash].css'),
@@ -79,9 +80,6 @@ if (env === 'production') {
             new webpack.optimize.DedupePlugin(),
             new webpack.optimize.UglifyJsPlugin({
                 compress: {warnings: false}
-            }),
-            new webpack.DefinePlugin({
-                'process.env.NODE_ENV': JSON.stringify('production')
             })
         ]
     });
@@ -113,14 +111,6 @@ if (env === 'production') {
             loader: 'url?limit=1'
         }
     ];
-}
-else if (env === 'test') {
-    config = merge(config, {
-        output: {
-            path: './release',
-            publicPath: '/'
-        }
-    });
 }
 else {
     config = merge(config, {

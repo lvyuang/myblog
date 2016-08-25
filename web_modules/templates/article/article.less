@@ -46,13 +46,13 @@
 
         .subtitle {
             color: rgba(0, 0, 0, 0.439216);
-            margin: 0 0 15px 0;
+            margin: 15px 0 30px 0;
             font-size: 1.2rem;
         }
 
         > .byline {
             color: rgba(0, 0, 0, 0.439216);
-            margin: 0 0 5px 0;
+            margin: 0 0 10px 0;
 
             .date {
                 margin-right: 15px;
@@ -67,7 +67,7 @@
             }
         }
 
-        .categories {
+        > .categories {
             margin: 0 0 50px 0;
 
             a {
@@ -80,28 +80,7 @@
         }
 
         > .content {
-            line-height: 1.5em;
-            color: rgba(0, 0, 0, 0.8);
-            padding: 0 0 30px;
-
-            h2 {
-                font-weight: 800;
-                margin: 1em 0;
-            }
-
-            p {
-                margin: 1em 0;
-
-                a {
-                    text-decoration: underline;
-                }
-            }
-
-            img {
-                display: block;
-                width: 100%;
-                margin: 1em 0;
-            }
+            @import 'markdown.less';
         }
     }
 
