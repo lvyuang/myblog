@@ -9,7 +9,11 @@ const info = (articleId, cb) => {
     });
 
     if (result.length > 0) {
-        cb(null, result[0]);
+        const info = result[0];
+
+        info.content = require('./' + info.articleId + '.html.js');
+
+        cb(null, info);
     }
     else {
         cb({
@@ -58,8 +62,20 @@ const changeComments = (articleId) => {
     });
 };
 
+const routes = (cb) => {
+    const db = require('./article-list.db.json');
+
+    cb(null, db.map(item => {
+        return {
+            articleId: item.articleId,
+            url: item.url
+        };
+    }));
+};
+
 module.exports = {
     list,
     info,
+    routes,
     changeComments
 };

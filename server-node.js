@@ -10,6 +10,9 @@ app.use(morgan('dev'));
 app.use(compression());
 app.use(cookieParser());
 routes(app);
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(process.cwd(), 'build', 'index.html'));
+});
 
 app.listen(3000, () => {
     console.log('Server started, listening on port: 3000.');

@@ -3,7 +3,6 @@
 ```json
 {
     error: {
-        code: {Number}, // 0表示没有错误
         name: {String},
         message: {String}
     }

@@ -43,11 +43,15 @@ router.get('/api/article/list', (req, res) => {
         articleId: {Number}
     RETURNS:
         {
+            articleId: {String},
             title: {String},
-            content: {String},
-            comments: {Number},
+            subtitle: {String},
             createTime: {Timestamp},
-            categories: [{id: {String}, name: {String}}]
+            desc: {String},
+            url: {String},
+            comments: {Number},
+            categories: [{id: {String}, name: {String}}],
+            content: {String}
         }
  */
 router.get('/api/article/info', (req, res) => {
@@ -55,6 +59,29 @@ router.get('/api/article/info', (req, res) => {
     const {articleId} = params;
 
     data.article.info(articleId, (err, result) => {
+        if (err) {
+            res.json(err);
+            return;
+        }
+
+        res.json(result);
+    });
+});
+
+/**
+    获取文章路由列表
+    GET: /api/article/routes
+    PARAMS: null
+    RETURNS:
+        [
+            {
+                articleId: {String},
+                url: {String}
+            }
+        ]
+ */
+router.get('/api/article/routes', (req, res) => {
+    data.article.routes((err, result) => {
         if (err) {
             res.json(err);
             return;

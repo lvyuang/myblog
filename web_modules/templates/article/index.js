@@ -57,6 +57,8 @@ class TemplateArticle extends React.Component {
                 this.scrollToComments();
             }, 50);
         }
+
+        throw new Error('asdasasd');
     }
 
     shouldComponentUpdate(nextProps, nextState) {
@@ -67,10 +69,18 @@ class TemplateArticle extends React.Component {
         return true;
     }
 
+    componentWillUnmount() {
+        const {dispatch} = this.props;
+
+        dispatch({
+            type: 'ARTICLE-CLEAR'
+        });
+    }
+
     render() {
         const props = this.props;
         const {articleId, params} = props;
-        const {title, subtitle, createTime, comments, categories = []} = props.article;
+        const {title, subtitle, createTime, comments, categories = [], content} = props.article;
 
         return <div id={articleId || null} className={articleId ? `${articleId} template-article` : 'template-article'}>
             <header>
@@ -111,7 +121,7 @@ class TemplateArticle extends React.Component {
                         </Link>
                     )}
                 </div>
-                <div className="content" dangerouslySetInnerHTML={{__html: props.content}}></div>
+                <div className="content" dangerouslySetInnerHTML={{__html: content}}></div>
                 <ArticleCommentList articleId={articleId}/>
             </div>
             <footer>
