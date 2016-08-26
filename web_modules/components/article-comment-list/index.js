@@ -41,7 +41,7 @@ class ArticleCommentList extends React.Component {
             return;
         }
 
-        cookie.setItem('user', post.user, 60 * 60 * 24 * 30);
+        cookie.setItem('user', post.user, 60 * 60 * 24 * 30, '/');
 
         ajax({
             url: '/api/article/comment',

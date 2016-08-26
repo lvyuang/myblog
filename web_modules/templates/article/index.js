@@ -57,8 +57,6 @@ class TemplateArticle extends React.Component {
                 this.scrollToComments();
             }, 50);
         }
-
-        throw new Error('asdasasd');
     }
 
     shouldComponentUpdate(nextProps, nextState) {

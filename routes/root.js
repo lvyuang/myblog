@@ -39,8 +39,24 @@ module.exports = (app) => {
         });
     });
 
+    // 解析请求
+    app.use((req, res, next) => {
+        try {
+            const query = req.query.data && JSON.parse(req.query.data) || {};
+            const body = req.body.data && JSON.parse(req.body.data) || {};
+
+            req.data = Object.assign({}, query, body);
+        }
+        catch (ex) {
+            req.data = {};
+        }
+
+        next();
+    });
+
     app.use('/', express.static(path.resolve(process.cwd(), 'build')));
     app.use('/resources', express.static(path.resolve(process.cwd(), 'resources')));
 
     app.use(require('./article.js'));
+    app.use(require('./log.js'));
 };

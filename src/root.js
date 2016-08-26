@@ -7,6 +7,8 @@ import Provider from 'react-redux/lib/components/Provider.js';
 import storeManager from 'core/store-manager.js';
 import Root from './components/root.jsx';
 
+import ajax from 'utils/ajax.js';
+
 // reducer
 const reducer = (state = {}, action) => {
     switch (action.type) {
@@ -39,7 +41,23 @@ const store = storeManager.initStore('root', reducer);
 
 ReactDOM.render(
     <Provider store={store}>
-        <Router history={browserHistory} onUpdate={() => window.scrollTo(0, 0)} routes={route}></Router>
+        <Router
+            history={browserHistory}
+            onUpdate={
+                () => {
+                    window.scrollTo(0, 0);
+
+                    ajax({
+                        url: '/api/log/access',
+                        method: 'get',
+                        params: {
+                            url: location.href
+                        }
+                    });
+                }
+            }
+            routes={route}
+        />
     </Provider>,
     document.getElementById('root-container')
 );
