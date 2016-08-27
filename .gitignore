@@ -4,3 +4,4 @@ build/
 release/
 routes/
 logs/
+routes/db/comments/

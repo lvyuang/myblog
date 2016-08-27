@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const data = require('./data');
+const serviceArticle = require('./services/article');
+const serviceComment = require('./services/comment');
 
 /**
     获取文章列表
@@ -23,10 +24,10 @@ const data = require('./data');
         ]
  */
 router.get('/api/article/list', (req, res) => {
-    const params = req.query.data && JSON.parse(req.query.data) || {};
+    const params = req.data;
     const {startIndex, length, category} = params;
 
-    data.article.list(startIndex, length, category, (err, result) => {
+    serviceArticle.list(startIndex, length, category, (err, result) => {
         if (err) {
             res.json(err);
             return;
@@ -55,10 +56,10 @@ router.get('/api/article/list', (req, res) => {
         }
  */
 router.get('/api/article/info', (req, res) => {
-    const params = JSON.parse(req.query.data);
+    const params = req.data;
     const {articleId} = params;
 
-    data.article.info(articleId, (err, result) => {
+    serviceArticle.info(articleId, (err, result) => {
         if (err) {
             res.json(err);
             return;
@@ -81,7 +82,7 @@ router.get('/api/article/info', (req, res) => {
         ]
  */
 router.get('/api/article/routes', (req, res) => {
-    data.article.routes((err, result) => {
+    serviceArticle.routes((err, result) => {
         if (err) {
             res.json(err);
             return;
@@ -129,9 +130,9 @@ router.get('/api/article/comments', (req, res) => {
     //         content: '我是评论我是评论我是评论我是评论我是评论我是评论我是评论'
     //     }
     // ];
-    const params = JSON.parse(req.query.data);
+    const params = req.data;
 
-    data.comment.list(params.articleId, (err, result) => {
+    serviceComment.list(params.articleId, (err, result) => {
         if (err) {
             res.json(err);
             return;
@@ -159,10 +160,10 @@ router.get('/api/article/comments', (req, res) => {
         }
  */
 router.post('/api/article/comment', (req, res) => {
-    const params = JSON.parse(req.body.data);
+    const params = req.data;
     const {articleId, user, createTime, content, quotation} = params;
 
-    data.comment.post(articleId, user, createTime, content, quotation, (err) => {
+    serviceComment.post(articleId, user, createTime, content, quotation, (err) => {
         if (err) {
             res.json(err);
             return;

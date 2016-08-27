@@ -47,6 +47,7 @@ ReactDOM.render(
                 () => {
                     window.scrollTo(0, 0);
 
+                    // 记录访问日志
                     ajax({
                         url: '/api/log/access',
                         method: 'get',

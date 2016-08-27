@@ -3,13 +3,13 @@ const express = require('express');
 const routes = require('./routes/root.js');
 const morgan = require('morgan');
 const compression = require('compression');
-const cookieParser = require('cookie-parser');
 
 const app = express();
 app.use(morgan('dev'));
 app.use(compression());
-app.use(cookieParser());
+
 routes(app);
+
 app.get('*', (req, res) => {
     res.sendFile(path.resolve(process.cwd(), 'build', 'index.html'));
 });

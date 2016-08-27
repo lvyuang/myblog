@@ -2,16 +2,24 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
+const cookieParser = require('cookie-parser');
+const utils = require(path.resolve(process.cwd(), 'routes', 'utils'));
 
 module.exports = (app) => {
     app.use(favicon(path.resolve(process.cwd(), 'resources/favicon.ico')));
+
+    // cookie
+    app.use(cookieParser());
 
     // 解析post请求
     app.use(bodyParser.json({limit: '25mb'}));
     app.use(bodyParser.urlencoded({limit: '25mb', extended: true}));
 
     // 加载文章路由
-    const articleRoutes = require('./data/article/article-list.db.json');
+    const articleRoutes = utils.readfileSync(
+        path.resolve(process.cwd(), 'routes', 'db', 'article', 'article-list.db.txt'),
+        true
+    );
 
     articleRoutes.forEach(item => {
         app.get(item.url + '*', (req, res, next) => {
