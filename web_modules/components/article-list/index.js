@@ -2,7 +2,6 @@ import './article-list.less';
 
 import React from 'react';
 import Link from 'react-router/lib/Link.js';
-import TemplateMain from 'templates/main';
 
 class Index extends React.Component {
     render() {

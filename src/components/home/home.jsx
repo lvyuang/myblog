@@ -35,7 +35,7 @@ class Index extends React.Component {
     render() {
         const {articleList} = this.props;
 
-        return <TemplateMain id="home" className="home">
+        return <TemplateMain id="home">
             <ArticleList data={articleList}></ArticleList>
         </TemplateMain>;
     }

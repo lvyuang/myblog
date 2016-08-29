@@ -26,7 +26,7 @@
     .post {
         .border();
 
-        > .user, .quotation, .response {
+        > .user, .password, .quotation, .response {
             display: table;
             table-layout: fixed;
             width: 100%;
@@ -54,9 +54,16 @@
                 resize: none;
                 box-sizing: border-box;
             }
+
+            > div {
+                display: table-cell;
+                width: 100%;
+                box-sizing: border-box;
+                padding: 5px;
+            }
         }
 
-        > .user {
+        > .user, .password {
             > li {
                 vertical-align: middle;
             }
@@ -103,6 +110,7 @@
 
         .submit {
             text-align: right;
+            position: relative;
 
             a {
                 height: 36px;
@@ -116,6 +124,14 @@
                     background-color: rgba(0, 0, 0, 0.6);
                     color: white;
                 }
+            }
+
+            .error-message {
+                position: absolute;
+                left: 2rem;
+                top: 11px;
+                color: red;
+                font-size: 1rem;
             }
         }
     }

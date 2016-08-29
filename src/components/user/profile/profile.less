@@ -1,0 +1,66 @@
+.profile {
+    font-size: 1.2rem;
+
+    .line {
+        margin: 0 auto 1rem;
+        width: 600px;
+        padding-left: 2rem;
+        position: relative;
+        box-sizing: border-box;
+
+        > li {
+            position: absolute;
+            left: 0;
+            top: 11px;
+            width: 1rem;
+        }
+
+        > input {
+            display: inline-block;
+            width: 100%;
+            border-width: 0;
+            border-bottom: 1px solid #aaa;
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: transparent;
+        }
+
+        > span {
+            display: inline-block;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px;
+            background-color: transparent;
+        }
+    }
+
+    .button-line {
+        margin: 0 auto 1rem;
+        width: 600px;
+        text-align: right;
+        margin-top: 2rem;
+        position: relative;
+
+        .button {
+            height: 36px;
+            line-height: 36px;
+            padding: 0 15px;
+            border: 1px solid rgba(0, 0, 0, 0.6);
+            border-radius: 18px;
+            display: inline-block;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.6);
+                color: white;
+            }
+        }
+
+        .error-message {
+            position: absolute;
+            left: 2rem;
+            top: 11px;
+            font-size: 1rem;
+            color: red;
+        }
+    }
+}

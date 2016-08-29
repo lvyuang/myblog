@@ -1,31 +1,28 @@
 const fs = require('fs-extra');
 const path = require('path');
-const readline = require('readline');
 const serviceArticle = require('../article');
+const serviceUser = require('../user');
+const utils = require(path.resolve(process.cwd(), 'routes', 'utils'));
 
 const list = (articleId, cb) => {
     const list = [];
 
-    readline.createInterface({
-        input: fs
-            .createReadStream(
-                path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`)
-            )
-            .on('error', (err) => {
-                // 没有找到评论文件，按无评论处理
-                cb(null, []);
-            })
-    }).on('line', (line) => {
-        try {
-            list.unshift(JSON.parse(line));
+    utils.readfile(
+        path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`),
+        true,
+        [],
+        (err, list) => {
+            if (err) {
+                cb(err);
+            }
+            else {
+                cb(null, list);
+            }
         }
-        catch (ex) {}
-    }).on('close', () => {
-        cb(null, list);
-    })
+    );
 };
 
-const post = (articleId, user, createTime, content, quotation, cb) => {
+const postComment = (articleId, user, createTime, content, quotation, cb) => {
     const data = {
         commentId: Date.now(),
         user,
@@ -34,37 +31,103 @@ const post = (articleId, user, createTime, content, quotation, cb) => {
         quotation
     };
 
+    const commentFilePath = path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`);
+
     fs.ensureFile(
-        path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`),
+        commentFilePath,
         (err) => {
             if (err) {
-                console.error(err);
+                cb(err);
+                return;
             }
             else {
-                fs.appendFile(
-                    path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`),
-                    JSON.stringify(data) + '\n',
-                    'utf8',
-                    (err) => {
-                        if (err) {
-                            cb({
-                                error: err
-                            });
-                            return;
-                        }
-
-                        // 修改文章列表的评论数
-                        serviceArticle.changeComments(articleId);
-
-                        cb(null);
+                list(articleId, (err, list) => {
+                    if (err) {
+                        cb(err);
                     }
-                );
+                    else {
+                        list.unshift(data);
+
+                        fs.writeFile(
+                            commentFilePath,
+                            JSON.stringify(list),
+                            'utf8',
+                            (err) => {
+                                if (err) {
+                                    cb(err);
+                                }
+                                else {
+                                    // 文章评论数加1
+                                    serviceArticle.changeComments(articleId, (err) => {
+                                        cb(err);
+                                    });
+                                }
+                            }
+                        );
+                    }
+                });
             }
         }
     );
 };
 
+const post = (articleId, token, createTime, content, quotation, cb) => {
+    serviceUser.auth(token, (err, user) => {
+        if (err) {
+            cb(err);
+        }
+        else {
+            postComment(articleId, user, createTime, content, quotation, cb);
+        }
+    });
+};
+
+const postWithUserPassword = (articleId, user, password, createTime, content, quotation, cb) => {
+    serviceUser.exist(user, (err, isExisted) => {
+        if (err) {
+            cb(err);
+        }
+        else {
+            if (isExisted) {
+                serviceUser.signin(user, password, (err, token) => {
+                    if (err) {
+                        cb(err);
+                    }
+                    else {
+                        postComment(articleId, user, createTime, content, quotation, (err) => {
+                            if (err) {
+                                cb(err);
+                            }
+                            else {
+                                cb(null, token);
+                            }
+                        });
+                    }
+                });
+            }
+            else {
+                serviceUser.register(user, password, (err, token) => {
+                    if (err) {
+                        cb(err);
+                    }
+                    else {
+                        postComment(articleId, user, createTime, content, quotation, (err) => {
+                            if (err) {
+                                cb(err);
+                            }
+                            else {
+                                cb(null, token);
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    });
+};
+
 module.exports = {
     list,
-    post
+    post,
+    postWithUserPassword
 };

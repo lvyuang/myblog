@@ -38,7 +38,7 @@ class Category extends React.Component {
     render() {
         const {articleList} = this.props;
 
-        return <TemplateMain id="category" className="category">
+        return <TemplateMain id="category">
             <div className="category-title-container">
                 <div className="category-title">
                     <li className="fa fa-hashtag"></li>

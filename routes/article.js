@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const serviceArticle = require('./services/article');
 const serviceComment = require('./services/comment');
+const errorFormat = require('./utils/error-format.js');
 
 /**
     获取文章列表
@@ -29,7 +30,7 @@ router.get('/api/article/list', (req, res) => {
 
     serviceArticle.list(startIndex, length, category, (err, result) => {
         if (err) {
-            res.json(err);
+            res.json(errorFormat(err));
             return;
         }
 
@@ -61,7 +62,7 @@ router.get('/api/article/info', (req, res) => {
 
     serviceArticle.info(articleId, (err, result) => {
         if (err) {
-            res.json(err);
+            res.json(errorFormat(err));
             return;
         }
 
@@ -84,7 +85,7 @@ router.get('/api/article/info', (req, res) => {
 router.get('/api/article/routes', (req, res) => {
     serviceArticle.routes((err, result) => {
         if (err) {
-            res.json(err);
+            res.json(errorFormat(err));
             return;
         }
 
@@ -134,7 +135,7 @@ router.get('/api/article/comments', (req, res) => {
 
     serviceComment.list(params.articleId, (err, result) => {
         if (err) {
-            res.json(err);
+            res.json(errorFormat(err));
             return;
         }
 
@@ -147,9 +148,9 @@ router.get('/api/article/comments', (req, res) => {
     POST: /api/article/comment
     PARAMS:
         articleId: {Number},
-        user: {String},
-        content: {String},
+        token: {String},
         createTime: {Timestamp},
+        content: {String},
         [quotation]: {
             user: {String},
             content: {String}
@@ -161,11 +162,11 @@ router.get('/api/article/comments', (req, res) => {
  */
 router.post('/api/article/comment', (req, res) => {
     const params = req.data;
-    const {articleId, user, createTime, content, quotation} = params;
+    const {articleId, token, createTime, content, quotation} = params;
 
-    serviceComment.post(articleId, user, createTime, content, quotation, (err) => {
+    serviceComment.post(articleId, token, createTime, content, quotation, (err) => {
         if (err) {
-            res.json(err);
+            res.json(errorFormat(err));
             return;
         }
 
@@ -176,18 +177,36 @@ router.post('/api/article/comment', (req, res) => {
 });
 
 /**
-    删除评论
-    DELETE: /api/article/comment
+    注册并发表评论
+    POST: /api/article/registerAndComment
     PARAMS:
-        commentId: {Number}
+        articleId: {Number},
+        user: {String},
+        password: {String},
+        createTime: {Timestamp},
+        content: {String},
+        [quotation]: {
+            user: {String},
+            content: {String}
+        }
     RETURNS:
         {
-            ok: true
+            token: {String}
         }
  */
-router.delete('/api/article/comment', (req, res) => {
-    res.json({
-        method: 'delete'
+router.post('/api/article/commentWithUserPassword', (req, res) => {
+    const params = req.data;
+    const {articleId, user, password, createTime, content, quotation} = params;
+
+    serviceComment.postWithUserPassword(articleId, user, password, createTime, content, quotation, (err, token) => {
+        if (err) {
+            res.json(errorFormat(err));
+            return;
+        }
+
+        res.json({
+            token
+        });
     });
 });
 

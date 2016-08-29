@@ -67,4 +67,5 @@ module.exports = (app) => {
 
     app.use(require('./article.js'));
     app.use(require('./log.js'));
+    app.use(require('./user.js'));
 };

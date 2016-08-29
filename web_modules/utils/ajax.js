@@ -30,11 +30,13 @@ export default (options) => {
                 credentials: 'same-origin'
             }
         ).then(res => {
-            if (res.error) {
-                throw createErrorObject(res.error.name, res.error.message);
+            return res.json();
+        }).then(result => {
+            if (result.error) {
+                throw createErrorObject(result.error.name, result.error.message);
             }
             else {
-                return res.json();
+                return result;
             }
         });
     }
@@ -43,11 +45,13 @@ export default (options) => {
             method: method.toUpperCase(),
             credentials: 'same-origin'
         }).then(res => {
-            if (res.error) {
-                throw createErrorObject(res.error.name, res.error.message);
+            return res.json();
+        }).then(result => {
+            if (result.error) {
+                throw createErrorObject(result.error.name, result.error.message);
             }
             else {
-                return res.json();
+                return result;
             }
         });
     }

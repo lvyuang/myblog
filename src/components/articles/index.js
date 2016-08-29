@@ -1,5 +1,4 @@
 export default {
-    path: '',
     getChildRoutes(nextState, cb) {
         require.ensure([], (require) => {
             const storeManager = require('core/store-manager').default;
@@ -26,12 +25,13 @@ export default {
 
             const user = cookie.getItem('user') || '';
 
-            const postReducer = (state = {user, content: ''}, action) => {
+            const postReducer = (state = {user, content: '', error: ''}, action) => {
                 switch (action.type) {
                     case 'ARTICLE-CLEAR':
                         return {
                             user: cookie.getItem('user') || '',
-                            content: ''
+                            content: '',
+                            error: ''
                         };
                     case 'ARTICLE-COMMENT-POST-SET':
                         return {
@@ -41,7 +41,8 @@ export default {
                     case 'ARTICLE-COMMENT-POST-CLEAR':
                         return {
                             user: cookie.getItem('user') || '',
-                            content: ''
+                            content: '',
+                            error: ''
                         };
                     default:
                         return state;

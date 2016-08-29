@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs-extra');
 const path = require('path');
 const articleDbPath = path.resolve(process.cwd(), 'routes', 'db', 'article', 'article-list.db.txt');
 const utils = require(path.resolve(process.cwd(), 'routes', 'utils'));
@@ -7,7 +7,13 @@ const info = (articleId, cb) => {
     utils.readfile(
         articleDbPath,
         true,
-        (db) => {
+        [],
+        (err, db) => {
+            if (err) {
+                cb(err);
+                return;
+            }
+
             const result = db.filter(item => {
                 return item.articleId === articleId;
             });
@@ -18,7 +24,13 @@ const info = (articleId, cb) => {
                 utils.readfile(
                     path.resolve(process.cwd(), 'routes', 'db', 'article', `${info.articleId}.html`),
                     false,
-                    (html) => {
+                    '',
+                    (err, html) => {
+                        if (err) {
+                            cb(err);
+                            return;
+                        }
+
                         info.content = html;
                         cb(null, info);
                     }
@@ -26,10 +38,8 @@ const info = (articleId, cb) => {
             }
             else {
                 cb({
-                    error: {
-                        name: 'ERR_NO_ITEM',
-                        message: '没有找到文章数据，文章ID:' + articleId
-                    }
+                    name: 'ERR_NO_ITEM',
+                    message: '没有找到文章数据，文章ID:' + articleId
                 });
             }
         }
@@ -40,7 +50,13 @@ const list = (startIndex = 0, length = 10, category, cb) => {
     utils.readfile(
         articleDbPath,
         true,
-        (db) => {
+        [],
+        (err, db) => {
+            if (err) {
+                cb(err);
+                return;
+            }
+
             let result = db;
 
             if (category) {
@@ -72,31 +88,53 @@ const list = (startIndex = 0, length = 10, category, cb) => {
     );
 };
 
-const changeComments = (articleId) => {
-    utils.readfile(
-        articleDbPath,
-        true,
-        (db) => {
-            db.forEach(item => {
-                if (item.articleId === articleId) {
-                    item.comments++;
-                }
-            });
-
-            fs.writeFile(articleDbPath, JSON.stringify(db, null, '    '), 'utf8', (err) => {
-                if (err) {
-                    console.error(err);
-                }
-            });
+const changeComments = (articleId, cb) => {
+    fs.ensureFile(articleDbPath, (err) => {
+        if (err) {
+            cb(err);
+            return;
         }
-    );
+
+        utils.readfile(
+            articleDbPath,
+            true,
+            [],
+            (err, db) => {
+                if (err) {
+                    cb(err);
+                    return;
+                }
+
+                db.forEach(item => {
+                    if (item.articleId === articleId) {
+                        item.comments++;
+                    }
+                });
+
+                fs.writeFile(articleDbPath, JSON.stringify(db, null, '    '), 'utf8', (err) => {
+                    if (err) {
+                        cb(err);
+                    }
+                    else {
+                        cb(null);
+                    }
+                });
+            }
+        );
+    });
 };
 
 const routes = (cb) => {
     utils.readfile(
         articleDbPath,
         true,
-        (db) => {
+        [],
+        (err, db) => {
+            if (err) {
+                cb(err);
+                return;
+            }
+
             cb(null, db.map(item => {
                 return {
                     articleId: item.articleId,

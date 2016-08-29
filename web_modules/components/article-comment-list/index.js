@@ -9,7 +9,10 @@ import cookie from 'utils/cookie.js';
     state => {
         return {
             comments: state.article.comments,
-            post: state.article.post
+            post: {
+                ...state.article.post
+            },
+            token: state.root.token
         };
     }
 )
@@ -33,11 +36,58 @@ class ArticleCommentList extends React.Component {
         });
     }
 
-    postComment(event) {
-        event.preventDefault();
+    postCommentAfterRegister() {
         const {dispatch, articleId, post} = this.props;
+        const password = document.getElementById('post-password').value;
 
-        if (!post.user || !post.content) {
+        if (!post.user || !password || !post.content) {
+            return;
+        }
+
+        cookie.setItem('user', post.user, 60 * 60 * 24 * 30, '/');
+
+        ajax({
+            url: '/api/article/commentWithUserPassword',
+            method: 'post',
+            params: {
+                articleId,
+                user: post.user,
+                password,
+                content: post.content,
+                createTime: Date.now(),
+                quotation: post.quotation
+            }
+        }).then(result => {
+            dispatch({
+                type: 'ARTICLE-COMMENT-POST-CLEAR'
+            });
+
+            dispatch({
+                type: 'ARTICLE-INFO-ADD-COMMENTS'
+            });
+
+            dispatch({
+                type: 'SET-TOKEN',
+                token: result.token
+            });
+
+            cookie.setItem('token', result.token, 60 * 60 * 24 * 7, '/');
+
+            this.getCommentList(articleId);
+        })
+        .catch(err => {
+            dispatch({
+                type: 'ARTICLE-COMMENT-POST-SET',
+                value: {error: err.message}
+            });
+        });
+    }
+
+    postCommentWithToken() {
+        const {dispatch, articleId, post} = this.props;
+        const {token} = this.props;
+
+        if (!post.content) {
             return;
         }
 
@@ -48,7 +98,7 @@ class ArticleCommentList extends React.Component {
             method: 'post',
             params: {
                 articleId,
-                user: post.user,
+                token,
                 content: post.content,
                 createTime: Date.now(),
                 quotation: post.quotation
@@ -65,8 +115,30 @@ class ArticleCommentList extends React.Component {
             this.getCommentList(articleId);
         })
         .catch(err => {
-            console.error(err);
+            dispatch({
+                type: 'ARTICLE-COMMENT-POST-SET',
+                value: {error: err.message}
+            });
+
+            if (err.name === 'USER_SESSION_EXPIRED') {
+                dispatch({
+                    type: 'CLEAR-TOKEN'
+                });
+            }
         });
+    }
+
+    postComment(event) {
+        event.preventDefault();
+
+        const {token} = this.props;
+
+        if (token) {
+            this.postCommentWithToken();
+        }
+        else {
+            this.postCommentAfterRegister();
+        }
     }
 
     scrollToComments(event) {
@@ -87,7 +159,7 @@ class ArticleCommentList extends React.Component {
     }
 
     render() {
-        const {dispatch, comments, post} = this.props;
+        const {dispatch, comments, post, token} = this.props;
 
         return <div id="article-comment-list" className="article-comment-list">
             <div className="title">
@@ -97,19 +169,33 @@ class ArticleCommentList extends React.Component {
             <div className="post">
                 <div className="user">
                     <li className="fa fa-user"></li>
-                    <input
-                        id="post-user"
-                        type="text"
-                        placeholder="用户名"
-                        value={post.user}
-                        onChange={event => {
-                            dispatch({
-                                type: 'ARTICLE-COMMENT-POST-SET',
-                                value: {user: event.target.value}
-                            });
-                        }}
-                    />
+                    {token ?
+                        <div>{post.user}</div>
+                        :
+                        <input
+                            id="post-user"
+                            type="text"
+                            placeholder="用户名"
+                            value={post.user}
+                            onChange={event => {
+                                dispatch({
+                                    type: 'ARTICLE-COMMENT-POST-SET',
+                                    value: {user: event.target.value}
+                                });
+                            }}
+                        />
+                    }
                 </div>
+                {token ? null :
+                    <div className="password">
+                        <li className="fa fa-lock"></li>
+                        <input
+                            id="post-password"
+                            type="password"
+                            placeholder="密码"
+                        />
+                    </div>
+                }
                 {post.quotation ?
                     <div className="quotation">
                         <li className="fa fa-quote-left"></li>
@@ -153,6 +239,11 @@ class ArticleCommentList extends React.Component {
                         <li className="fa fa-send"></li>
                         发表评论
                     </a>
+                    {post.error ?
+                        <div className="error-message">
+                            {post.error}
+                        </div>
+                    : null}
                 </div>
             </div>
             <div className="comments">

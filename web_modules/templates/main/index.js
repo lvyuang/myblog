@@ -3,7 +3,7 @@ import React from 'react';
 import Link from 'react-router/lib/Link.js';
 
 export default (props) =>
-    <div id={props.id || null} className={props.className ? `${props.className} template-main` : 'template-main'}>
+    <div id={props.id || null} className={props.id ? `${props.id} template-main` : 'template-main'}>
         <header>
             <div className="container">
                 <div className="title">
