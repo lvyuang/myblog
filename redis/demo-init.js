@@ -73,7 +73,7 @@ client.flushallAsync().then(res => {
             1472793920600, 'day1'
         ],
         [
-            'rpush', 'category-list',
+            'sadd', 'category-list',
             'sample', 'text'
         ],
         [

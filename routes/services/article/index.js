@@ -80,7 +80,7 @@ const list = (start = 0, end = -1, category, cb) => {
             //     ["hgetall", "article:2"],
             //     ["zcard", "comment-list:2"],
             //     ["lrange", "article:2:categories", 0, -1],
-            //     ["lrange", "category-list", 0, -1]
+            //     ["smembers", "category-list"]
             // ]
             const commands = articleIdList
                 .map(articleId => {
@@ -98,7 +98,7 @@ const list = (start = 0, end = -1, category, cb) => {
                     return next;
                 }, []);
 
-            commands.push(['lrange', 'category-list', 0, -1]);
+            commands.push(['smembers', 'category-list']);
 
             // 处理返回结果
             // [{..., createTime: "123456"}, 1, ['cat1'], {..., createTime: "678902"}, 2, ['cat1', 'cat2']] =>
@@ -173,13 +173,72 @@ const routes = (cb) => {
     }).catch(cb);
 };
 
-const post = () => {
+const post = (articleId, title, subtitle, createTime, desc, url, categories, content, cb) => {
+    let params = [];
 
+    client.existsAsync(`article:${articleId}`).then(res => {
+        if (res) {
+            cb({
+                name: 'ARTICLE_ID_REPEATED',
+                message: 'articleId重复'
+            });
+        }
+        else {
+            client.batch(
+                [
+                    ['hmset', `article:${articleId}`, 'articleId', articleId, 'title', title, 'subtitle', subtitle, 'createTime', createTime, 'desc', desc, 'url', url],
+                    ['rpush', `article:${articleId}:categories`].concat(categories.map(category => {return category.categoryId;})),
+                    ['set', `article:${articleId}:content`, content],
+                    ['zadd', 'article-list', createTime, articleId],
+                    ['sadd', 'category-list'].concat(categories.map(category => {return category.categoryId;}))
+                ]
+                .concat(categories.map(category => {
+                    return ['zadd', `article-list:${category.categoryId}`, createTime, articleId];
+                }))
+                .concat(categories.map(category => {
+                    return ['hmset', `category:${category.categoryId}`, 'categoryId', category.categoryId, 'categoryName', category.categoryName]
+                }))
+            ).execAsync().then(res => {
+                cb(null, res);
+            }).catch(cb);
+        }
+    }).catch(cb);
+};
+
+const remove = (articleId, cb) => {
+    client.lrangeAsync(`article:${articleId}:categories`, 0, -1).then(categoryIdList => {
+        client.batch(
+            [
+                ['del', `article:${articleId}`],
+                ['del', `article:${articleId}:categories`],
+                ['del', `article:${articleId}:content`],
+                ['zrem', 'article-list', articleId]
+            ]
+            .concat(categoryIdList.map(
+                categoryId => {
+                    return ['zrem', `article-list:${categoryId}`, articleId];
+                }
+            ))
+            .concat(categoryIdList.map(
+                categoryId => {
+                    return ['srem', `category-list`, categoryId];
+                }
+            ))
+            .concat(categoryIdList.map(
+                categoryId => {
+                    return ['del', `category:${categoryId}`];
+                }
+            ))
+        ).execAsync().then(res => {
+            cb(null, res);
+        }).catch(cb);
+    }).catch(cb);
 };
 
 module.exports = {
     list,
     info,
     post,
+    remove,
     routes
 };

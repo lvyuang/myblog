@@ -112,7 +112,7 @@ class TemplateArticle extends React.Component {
                 </div>
                 <div className="categories">
                     {categories.map((catItem, catIndex) =>
-                        <Link key={catItem.categoryId} to={`/category/${catItem.categoryId}`} className="category">
+                        <Link key={catItem.categoryId} to={`/category/${catItem.categoryId}/${catItem.categoryName}`} className="category">
                             <li className="fa fa-folder-open"></li>
                             {catItem.categoryName}
                             {catIndex < categories.length - 1 ? '，' : null}
