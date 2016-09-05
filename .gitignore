@@ -3,7 +3,7 @@ node_modules/
 build/
 release/
 /logs/
-routes/db/comments/
 redis/data/*.aof
 redis/data/*.rdb
 redis/logs/*.log
+redis/pid/*.pid

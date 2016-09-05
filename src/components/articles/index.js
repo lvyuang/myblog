@@ -14,8 +14,7 @@ export default {
                     case 'ARTICLE-COMMENTS-GET-LIST':
                         return action.comments.map(comment => {
                             return {
-                                ...comment,
-                                createTime: formatDate(comment.createTime)
+                                ...comment
                             };
                         });
                     default:
@@ -55,13 +54,12 @@ export default {
                         return {};
                     case 'ARTICLE-INFO-GET':
                         return {
-                            ...action.article,
-                            createTime: formatDate(action.article.createTime)
+                            ...action.article
                         };
                     case 'ARTICLE-INFO-ADD-COMMENTS':
                         return {
                             ...state,
-                            comments: state.comments + 1
+                            commentListLength: state.commentListLength + 1
                         };
                     default:
                         return state;

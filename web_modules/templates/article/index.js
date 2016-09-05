@@ -78,7 +78,7 @@ class TemplateArticle extends React.Component {
     render() {
         const props = this.props;
         const {articleId, params} = props;
-        const {title, subtitle, createTime, comments, categories = [], content} = props.article;
+        const {title, subtitle, createTime, commentListLength, categories = [], content} = props.article;
 
         return <div id={articleId || null} className={articleId ? `${articleId} template-article` : 'template-article'}>
             <header>
@@ -107,14 +107,14 @@ class TemplateArticle extends React.Component {
                         className="comments"
                         onClick={this.scrollToComments.bind(this)}>
                         <li className="fa fa-comments"></li>
-                        {comments}
+                        {commentListLength}
                     </a>
                 </div>
                 <div className="categories">
                     {categories.map((catItem, catIndex) =>
-                        <Link key={catItem.id} to={`/category/${catItem.name}`} className="category">
+                        <Link key={catItem.categoryId} to={`/category/${catItem.categoryId}`} className="category">
                             <li className="fa fa-folder-open"></li>
-                            {catItem.name}
+                            {catItem.categoryName}
                             {catIndex < categories.length - 1 ? '，' : null}
                         </Link>
                     )}

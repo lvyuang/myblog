@@ -26,7 +26,12 @@ const updateStore = (key, reducer) => {
     store.replaceReducer(combineReducers(state));
 };
 
+const getStore = () => {
+    return store;
+};
+
 export default {
     initStore,
-    updateStore
+    updateStore,
+    getStore
 };

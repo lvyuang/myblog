@@ -1,56 +1,47 @@
-const fs = require('fs-extra');
-const path = require('path');
-const utils = require(path.resolve(process.cwd(), 'routes', 'utils'));
-
-const userDbPath = `${process.cwd()}/routes/db/user/user.db.txt`;
-const userSessionPath = `${process.cwd()}/routes/db/user/user.session.txt`;
+const client = require('../../db');
+const crypto = require('crypto');
 
 const updateUserSession = (token, user, cb) => {
-    fs.ensureFile(userSessionPath, (err) => {
-        if (err) {
-            cb(err);
-        }
-        else {
-            utils.readfile(userSessionPath, true, {}, (err, userSession) => {
-                if (err) {
-                    cb(err);
-                }
-                else {
-                    userSession[token] = {user, createTime: Date.now()};
+    client
+        .hgetAsync('session-list', user)
+        .then(oldToken => {
+            const params = [];
+            if (oldToken) {
+                params.push([
+                    'hdel', 'session-list', oldToken
+                ]);
+            }
 
-                    fs.writeFile(userSessionPath, JSON.stringify(userSession), 'utf8', (err) => {
-                        if (err) {
-                            cb(err);
-                        }
-                        else {
-                            cb(null);
-                        }
-                    });
-                }
-            });
-        }
-    });
+            params.push([
+                'hmset', 'session-list',
+                token, user,
+                user, token
+            ]);
+
+            client
+                .multi(params)
+                .execAsync()
+                .then(res => {
+                    cb(null, res);
+                })
+                .catch(cb);
+        })
+        .catch(cb);
 };
 
 const generateToken = (user) => {
-    return Date.now() + '|' + user;
+    const hash = crypto.createHash('sha256');
+
+    hash.update(Date.now() + '|' + user);
+    return hash.digest('hex');
 };
 
 const auth = (token, cb) => {
-    utils.readfile(userSessionPath, true, {}, (err, userSession) => {
-        if (err) {
-            cb(err);
-        }
-        else {
-            if (userSession.hasOwnProperty(token)) {
-                updateUserSession(token, userSession[token].user, (err) => {
-                    if (err) {
-                        cb(err);
-                    }
-                    else {
-                        cb(null, userSession[token].user);
-                    }
-                });
+    client
+        .hgetAsync('session-list', token)
+        .then(res => {
+            if (res) {
+                cb(null, res);
             }
             else {
                 cb({
@@ -58,61 +49,50 @@ const auth = (token, cb) => {
                     message: '用户登录时效已过期，请重新登录。'
                 });
             }
-        }
-    });
+        })
+        .catch(cb);
 };
 
 const register = (user, password, cb) => {
-    fs.ensureFile(userDbPath, (err) => {
-        if (err) {
-            cb(err);
-            return;
-        }
-
-        utils.readfile(userDbPath, true, {}, (err, userMap) => {
-            if (err) {
-                cb(err);
-                return;
-            }
-
-            if (userMap.hasOwnProperty(user)) {
+    client
+        .existsAsync(`user:${user}`)
+        .then(res => {
+            if (res) {
                 cb({
                     name: 'USER_REPEATED',
                     message: '用户名重复'
                 });
-            }
-            else {
-                userMap[user] = password;
 
-                fs.writeFile(userDbPath, JSON.stringify(userMap), 'utf8', (err) => {
-                    if (err) {
-                        cb(err);
-                    }
-                    else {
-                        const token = generateToken(user);
-
-                        updateUserSession(token, user, (err) => {
-                            if (err) {
-                                cb(err);
-                            }
-                            else {
-                                cb(null, token);
-                            }
-                        });
-                    }
-                });
+                return;
             }
-        });
-    });
+
+            client
+                .batch([
+                    ['hmset', `user:${user}`, 'userId', user, 'password', password],
+                    ['zadd', 'user-list', Date.now(), user]
+                ])
+                .execAsync()
+                .then(res => {
+                    const token = generateToken(user);
+
+                    updateUserSession(token, user, (err) => {
+                        if (err) {
+                            cb(err);
+                        }
+                        else {
+                            cb(null, token);
+                        }
+                    });
+                })
+                .catch(cb);
+        })
+        .catch(cb);
 };
 
 const signin = (user, password, cb) => {
-    utils.readfile(userDbPath, true, {}, (err, userMap) => {
-        if (err) {
-            cb(err);
-        }
-        else {
-            if (userMap.hasOwnProperty(user) && userMap[user] === password) {
+    client.hgetallAsync(`user:${user}`)
+        .then(res => {
+            if (res && res.password === password) {
                 const token = generateToken(user);
 
                 updateUserSession(token, user, (err) => {
@@ -130,56 +110,43 @@ const signin = (user, password, cb) => {
                     message: '用户登录失败，用户名不存在或者密码不正确。'
                 });
             }
-        }
-    });
+        })
+        .catch(cb);
 };
 
 const signout = (token, cb) => {
-    fs.ensureFile(userSessionPath, (err) => {
-        if (err) {
-            cb(err);
-        }
-        else {
-            utils.readfile(userSessionPath, true, {}, (err, userSession) => {
-                if (err) {
-                    cb(err);
-                }
-                else {
-                    if (userSession.hasOwnProperty(token)) {
-                        delete userSession.token;
-
-                        fs.writeFile(userSessionPath, JSON.stringify(userSession), 'utf8', (err) => {
-                            if (err) {
-                                cb(err);
-                            }
-                            else {
-                                cb(null);
-                            }
-                        });
-                    }
-                    else {
-                        cb(null);
-                    }
-                }
-            });
-        }
-    });
+    client
+        .hgetAsync(
+            'session-list',
+            token
+        )
+        .then(user => {
+            if (user) {
+                client
+                    .hdelAsync(
+                        'session-list',
+                        token,
+                        user
+                    )
+                    .then(res => {
+                        cb(null, res);
+                    })
+                    .catch(cb);
+            }
+            else {
+                cb(null);
+            }
+        })
+        .catch(cb);
 };
 
 const exist = (user, cb) => {
-    utils.readfile(userDbPath, true, {}, (err, userMap) => {
-        if (err) {
-            cb(err);
-        }
-        else {
-            if (userMap.hasOwnProperty(user)) {
-                cb(null, true);
-            }
-            else {
-                cb(null, false);
-            }
-        }
-    });
+    client
+        .existsAsync(`user:${user}`)
+        .then(res => {
+            cb(null, !!res);
+        })
+        .catch(cb);
 };
 
 module.exports = {
@@ -187,5 +154,7 @@ module.exports = {
     register,
     signin,
     signout,
-    exist
+    exist,
+    updateUserSession,
+    generateToken
 };

@@ -4,6 +4,7 @@ import React from 'react';
 import connect from 'react-redux/lib/components/connect.js';
 import ajax from 'utils/ajax.js';
 import cookie from 'utils/cookie.js';
+import sha256 from 'js-sha256';
 
 @connect(
     state => {
@@ -52,7 +53,7 @@ class ArticleCommentList extends React.Component {
             params: {
                 articleId,
                 user: post.user,
-                password,
+                password: sha256(password),
                 content: post.content,
                 createTime: Date.now(),
                 quotation: post.quotation

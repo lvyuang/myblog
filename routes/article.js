@@ -3,13 +3,14 @@ const router = express.Router();
 const serviceArticle = require('./services/article');
 const serviceComment = require('./services/comment');
 const errorFormat = require('./utils/error-format.js');
+const utils = require('./utils');
 
 /**
     获取文章列表
     GET: /api/article/list
     PARAMS:
-        [startIndex]: {Number}, // 起始位置，默认0
-        [length]: {Number}, // 长度，默认10
+        [start]: {Number}, // 起始位置，默认0
+        [end]: {Number}, // 截止位置，默认-1
         [category]: {String} // 目录，默认为null
     RETURNS:
         [
@@ -17,7 +18,7 @@ const errorFormat = require('./utils/error-format.js');
                 articleId: {Number},
                 title: {String},
                 createTime: {Timestamp},
-                comments: {Number},
+                commentListLength: {Number},
                 desc: {String},
                 url: {String},
                 categories: [{id: {String}, name: {String}}]
@@ -26,15 +27,17 @@ const errorFormat = require('./utils/error-format.js');
  */
 router.get('/api/article/list', (req, res) => {
     const params = req.data;
-    const {startIndex, length, category} = params;
+    const {start, end, category} = params;
 
-    serviceArticle.list(startIndex, length, category, (err, result) => {
+    serviceArticle.list(start, end, category, (err, result) => {
         if (err) {
             res.json(errorFormat(err));
             return;
         }
 
-        res.json(result);
+        res.json(result.map(item => {
+            return Object.assign({}, item, {createTime: utils.datetimeFormat(item.createTime)});
+        }));
     });
 });
 
@@ -51,7 +54,7 @@ router.get('/api/article/list', (req, res) => {
             createTime: {Timestamp},
             desc: {String},
             url: {String},
-            comments: {Number},
+            commentListLength: {Number},
             categories: [{id: {String}, name: {String}}],
             content: {String}
         }
@@ -66,7 +69,7 @@ router.get('/api/article/info', (req, res) => {
             return;
         }
 
-        res.json(result);
+        res.json(Object.assign({}, result, {createTime: utils.datetimeFormat(result.createTime)}));
     });
 });
 
@@ -139,7 +142,9 @@ router.get('/api/article/comments', (req, res) => {
             return;
         }
 
-        res.json(result);
+        res.json(result.map(item => {
+            return Object.assign({}, item, {createTime: utils.datetimeFormat(item.createTime)});
+        }));
     });
 });
 
@@ -178,7 +183,7 @@ router.post('/api/article/comment', (req, res) => {
 
 /**
     注册并发表评论
-    POST: /api/article/registerAndComment
+    POST: /api/article/commentWithUserPassword
     PARAMS:
         articleId: {Number},
         user: {String},

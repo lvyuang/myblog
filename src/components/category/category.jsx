@@ -4,7 +4,6 @@ import React from 'react';
 import TemplateMain from 'templates/main';
 import ArticleList from 'components/article-list';
 import connect from 'react-redux/lib/components/connect.js';
-import ajax from 'utils/ajax.js';
 
 @connect(
     state => {
@@ -14,27 +13,6 @@ import ajax from 'utils/ajax.js';
     }
 )
 class Category extends React.Component {
-    componentWillMount() {
-        const {dispatch, params} = this.props;
-
-        ajax({
-            url: '/api/article/list',
-            method: 'get',
-            params: {
-                category: params.name
-            }
-        }).then(result => {
-            dispatch({
-                type: 'ARTICLE-LIST-CATEGORY-GET',
-                articleList: result
-            });
-        }).catch(err => {
-            if (err) {
-                console.error(err);
-            }
-        });
-    }
-
     render() {
         const {articleList} = this.props;
 

@@ -36,7 +36,7 @@ const server = new WebpackDevServer(compiler, {
     colors: true,
     setup: function (app) {
         // 路由管理
-        routes(app);
+        routes(app, true);
     },
     stats: {
         colors: true,

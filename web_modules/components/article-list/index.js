@@ -21,7 +21,7 @@ class Index extends React.Component {
                         </span>
                         <Link to={`${item.url}/show-comments`} className="comments">
                             <li className="fa fa-comments"></li>
-                            {item.comments}
+                            {item.commentListLength}
                         </Link>
                     </div>
                     <div className="content">
@@ -29,10 +29,10 @@ class Index extends React.Component {
                         <Link to={item.url} className="more">查看更多</Link>
                     </div>
                     <div className="categories">
-                        {item.categories.map((catItem, catIndex) =>
-                            <Link key={catItem.id} to={`/category/${catItem.name}`} className="category">
+                        {item.categories && item.categories.map((catItem, catIndex) =>
+                            <Link key={catItem.categoryId} to={`/category/${catItem.categoryId}/${catItem.categoryName}`} className="category">
                                 <li className="fa fa-folder-open"></li>
-                                {catItem.name}
+                                {catItem.categoryName}
                                 {catIndex < item.categories.length - 1 ? '，' : null}
                             </Link>
                         ) || null}

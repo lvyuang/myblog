@@ -1,74 +1,77 @@
-const fs = require('fs-extra');
 const path = require('path');
-const serviceArticle = require('../article');
 const serviceUser = require('../user');
-const utils = require(path.resolve(process.cwd(), 'routes', 'utils'));
+const client = require(path.resolve(process.cwd(), 'routes', 'db'));
 
 const list = (articleId, cb) => {
-    const list = [];
-
-    utils.readfile(
-        path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`),
-        true,
-        [],
-        (err, list) => {
-            if (err) {
-                cb(err);
-            }
-            else {
-                cb(null, list);
-            }
-        }
-    );
+    client.zrevrangeAsync(`comment-list:${articleId}`, 0, -1).then(res => {
+        // COMMANDS:
+        // [1, 2] =>
+        // [['hgetall', 'comment:1'], ['hgetall', 'comment:2']]
+        const commentIdList = res;
+        client.batch(
+            commentIdList.map(commentId => {
+                return ['hgetall', `comment:${commentId}`];
+            })
+        ).execAsync().then(res => {
+            cb(null, res.map(comment => {
+                if (comment.quotationUser && comment.quotationContent) {
+                    return {
+                        commentId: comment.commentId,
+                        user: comment.user,
+                        createTime: parseInt(comment.createTime),
+                        content: comment.content,
+                        quotation: {
+                            user: comment.quotationUser,
+                            content: comment.quotationContent
+                        }
+                    };
+                }
+                else {
+                    return comment;
+                }
+            }))
+        }).catch(cb);
+    }).catch(cb);
 };
 
 const postComment = (articleId, user, createTime, content, quotation, cb) => {
-    const data = {
-        commentId: Date.now(),
-        user,
-        createTime,
-        content,
-        quotation
-    };
+    client.watch('comment-id');
 
-    const commentFilePath = path.resolve(process.cwd(), 'routes', 'db', 'comments', articleId, `./${articleId}.db.txt`);
-
-    fs.ensureFile(
-        commentFilePath,
-        (err) => {
-            if (err) {
-                cb(err);
-                return;
-            }
-            else {
-                list(articleId, (err, list) => {
-                    if (err) {
-                        cb(err);
-                    }
-                    else {
-                        list.unshift(data);
-
-                        fs.writeFile(
-                            commentFilePath,
-                            JSON.stringify(list),
-                            'utf8',
-                            (err) => {
-                                if (err) {
-                                    cb(err);
-                                }
-                                else {
-                                    // 文章评论数加1
-                                    serviceArticle.changeComments(articleId, (err) => {
-                                        cb(err);
-                                    });
-                                }
-                            }
-                        );
-                    }
-                });
-            }
+    client.getAsync('comment-id').then(res => {
+        if (!res) {
+            res = 0;
         }
-    );
+
+        const commentId = parseInt(res) + 1;
+
+        let params = [
+            'commentId',
+            commentId,
+            'user',
+            user,
+            'createTime',
+            createTime,
+            'content',
+            content
+        ];
+
+        if (quotation) {
+            params = params.concat([
+                'quotationUser',
+                quotation.user,
+                'quotationContent',
+                quotation.content
+            ]);
+        }
+
+        client.multi([
+            ['incr', 'comment-id'],
+            ['hmset', `comment:${commentId}`].concat(params),
+            ['zadd', `comment-list:${articleId}`, createTime, commentId]
+        ]).execAsync(res => {
+            cb(null, res);
+        }).catch(cb);
+    }).catch(cb);
 };
 
 const post = (articleId, token, createTime, content, quotation, cb) => {
@@ -129,5 +132,6 @@ const postWithUserPassword = (articleId, user, password, createTime, content, qu
 module.exports = {
     list,
     post,
-    postWithUserPassword
+    postWithUserPassword,
+    postComment
 };
