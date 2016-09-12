@@ -167,7 +167,15 @@ cd utils
 redis-<span class="hljs-keyword">cli</span>
 
 <span class="hljs-preprocessor"># 启动redis server</span>
-redis-server</code></pre>`;
+redis-server</code></pre>
+
+<h4 id="开放3000端口">开放3000端口</h4>
+
+
+
+<pre class="prettyprint"><code class=" hljs brainfuck"><span class="hljs-comment">firewall</span><span class="hljs-literal">-</span><span class="hljs-comment">cmd</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">zone=public</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">add</span><span class="hljs-literal">-</span><span class="hljs-comment">port=3000/tcp</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">permanent</span>
+
+<span class="hljs-comment">firewall</span><span class="hljs-literal">-</span><span class="hljs-comment">cmd</span> <span class="hljs-literal">-</span><span class="hljs-literal">-</span><span class="hljs-comment">reload</span></code></pre>`;
 
 service.remove(articleId, (err, res) => {
     console.log(err, res);
