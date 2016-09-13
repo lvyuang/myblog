@@ -36,7 +36,7 @@ router.get('/api/article/list', (req, res) => {
         }
 
         res.json(result.map(item => {
-            return Object.assign({}, item, {createTime: utils.datetimeFormat(item.createTime)});
+            return Object.assign({}, item, {createTime: utils.dateFormat(item.createTime)});
         }));
     });
 });
@@ -69,7 +69,7 @@ router.get('/api/article/info', (req, res) => {
             return;
         }
 
-        res.json(Object.assign({}, result, {createTime: utils.datetimeFormat(result.createTime)}));
+        res.json(Object.assign({}, result, {createTime: utils.dateFormat(result.createTime)}));
     });
 });
 

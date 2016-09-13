@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon -e js -w ./routes server.js",
-    "start:server": "concurrently --kill-others \"nodemon -e js -w ./routes server-node.js\" \"webpack --watch\"",
-    "start:server:production": "NODE_ENV=production concurrently --kill-others \"nodemon -e js -w ./routes server-node.js\" \"webpack --watch\"",
+    "dev": "nodemon -e js -w ./routes server.js",
+    "dev:server": "concurrently --kill-others \"nodemon -e js -w ./routes server-node.js\" \"webpack --watch\"",
+    "dev:server:production": "NODE_ENV=production concurrently --kill-others \"nodemon -e js -w ./routes server-node.js\" \"webpack --watch\"",
     "build": "webpack",
     "build:production": "NODE_ENV=production webpack",
     "redis": "redis-server ./redis.conf",
