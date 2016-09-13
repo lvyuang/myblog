@@ -136,7 +136,9 @@ client.flushallAsync().then(res => {
         [
             'hmset', 'session-list',
             'a7e912', 'tom',
-            'b231d1', 'bob'
+            'tom', 'a7e912',
+            'b231d1', 'bob',
+            'bob', 'b231d1'
         ],
         [
             'set', 'comment-id', '3'
