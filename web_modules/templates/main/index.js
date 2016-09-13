@@ -13,7 +13,7 @@ export default (props) =>
                     </Link>
                 </div>
                 <div className="subtitle">
-                    人生就是一次修行
+                    终日而思不如须臾所学
                 </div>
             </div>
         </header>

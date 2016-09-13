@@ -3,10 +3,10 @@ const service = require('../routes/services/article');
 const articleId = 'HyperLogLog';
 const title = '神奇的HyperLogLog';
 const subtitle = '聪明人想出来的解决方案';
-const createTime = Date.now();
+const createTime = (new Date(2016, 8, 11) - 0);
 const desc = 'HyperLogLog(后称HLL)是一种统计算法，用于统计大规模不重复的事物总数，比如一个网站一天的UV。其实，不用HLL也可以达到同样的目的，思路很简单。。。';
 const url = '2016/09/11/' + articleId;
-const categories = [{categoryId: 'redis', categoryName: 'Redis'}, {categoryId: 'algorithm', categoryName: '算法'}];
+const categories = [{categoryId: 'original', categoryName: '原创'}, {categoryId: 'redis', categoryName: 'Redis'}, {categoryId: 'algorithm', categoryName: '算法'}];
 const content = `<p>HyperLogLog(后称HLL)是一种统计算法，用于统计大规模不重复的事物总数，比如一个网站一天的UV。</p>
 
 <p>其实，不用HLL也可以达到同样的目的，思路很简单，记住每一个userId，如果接收到新的userId，总数加1，否则总数不变。</p>
