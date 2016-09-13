@@ -13,6 +13,12 @@ const content = `<h4 id="安装git">安装git</h4>
 
 <pre class="prettyprint"><code class="language-bash hljs ">yum install -y git</code></pre>
 
+<h4 id="安装vim">安装vim</h4>
+
+
+
+<pre class="prettyprint"><code class="language-bash hljs ">yum install -y vim</code></pre>
+
 
 
 <h4 id="配置git">配置git</h4>
@@ -20,6 +26,8 @@ const content = `<h4 id="安装git">安装git</h4>
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">vim /etc/gitconfig</code></pre>
+
+
 
 <pre class="prettyprint"><code class="language-vim hljs mel">[user]
     name = xxx
@@ -34,14 +42,6 @@ const content = `<h4 id="安装git">安装git</h4>
 [core]
     <span class="hljs-keyword">editor</span> = vim
     pager = cat</code></pre>
-
-<h4 id="安装vim">安装vim</h4>
-
-
-
-<pre class="prettyprint"><code class="language-bash hljs ">yum install -y vim</code></pre>
-
-
 
 <h4 id="安装zsh">安装zsh</h4>
 
