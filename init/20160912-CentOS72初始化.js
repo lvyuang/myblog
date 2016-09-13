@@ -13,11 +13,35 @@ const content = `<h4 id="安装git">安装git</h4>
 
 <pre class="prettyprint"><code class="language-bash hljs ">yum install -y git</code></pre>
 
+
+
+<h4 id="配置git">配置git</h4>
+
+
+
+<pre class="prettyprint"><code class="language-bash hljs ">vim /etc/gitconfig</code></pre>
+
+<pre class="prettyprint"><code class="language-vim hljs mel">[user]
+    name = xxx
+    email = xxx<span class="hljs-variable">@mail</span>.com
+[push]
+    <span class="hljs-keyword">default</span> = simple
+[<span class="hljs-keyword">alias</span>]
+    st = status
+    co = checkout
+    ci = commit
+    lg = <span class="hljs-keyword">log</span> --all --<span class="hljs-keyword">color</span> --graph --pretty=<span class="hljs-keyword">format</span>:<span class="hljs-string">'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)&lt;%an&gt;%Creset'</span> --abbrev-commit
+[core]
+    <span class="hljs-keyword">editor</span> = vim
+    pager = cat</code></pre>
+
 <h4 id="安装vim">安装vim</h4>
 
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">yum install -y vim</code></pre>
+
+
 
 <h4 id="安装zsh">安装zsh</h4>
 
@@ -31,11 +55,15 @@ chsh <span class="hljs-operator">-s</span> $(which zsh)
 <span class="hljs-comment"># 重新登录</span>
 logout</code></pre>
 
+
+
 <h4 id="安装oh-my-zsh">安装oh-my-zsh</h4>
 
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">sh -c <span class="hljs-string">"<span class="hljs-variable">$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)</span>"</span></code></pre>
+
+
 
 <h4 id="切换zsh皮肤">切换zsh皮肤</h4>
 
@@ -43,11 +71,15 @@ logout</code></pre>
 
 <pre class="prettyprint"><code class="language-bash hljs ">vim ~/.zshrc</code></pre>
 
+
+
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 修改字段</span>
 ZSH_THEME=<span class="hljs-string">"ys"</span></code></pre>
 
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 重新登录</span>
 logout</code></pre>
+
+
 
 <h4 id="添加用户和默认组wheel">添加用户和默认组(wheel)</h4>
 
@@ -55,11 +87,15 @@ logout</code></pre>
 
 <pre class="prettyprint"><code class="language-bash hljs ">useradd lvyuang -g wheel</code></pre>
 
+
+
 <h4 id="设置用户密码">设置用户密码</h4>
 
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">passwd lvyuang</code></pre>
+
+
 
 <h4 id="设置免密码ssh登录">设置免密码ssh登录</h4>
 
@@ -76,14 +112,20 @@ chmod <span class="hljs-number">700</span> ~/.ssh
 chown lvyuang:wheel ~/.ssh/authorized_keys
 chmod <span class="hljs-number">600</span> ~/.ssh/authorized_keys</code></pre>
 
+
+
 <h4 id="设置免密码sudo">设置免密码sudo</h4>
 
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">vim /etc/sudoers</code></pre>
 
+
+
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 修改字段</span>
 wheel ALL=(ALL) NOPASSWD: ALL</code></pre>
+
+
 
 <h4 id="显示vim行号">显示vim行号</h4>
 
@@ -91,8 +133,12 @@ wheel ALL=(ALL) NOPASSWD: ALL</code></pre>
 
 <pre class="prettyprint"><code class="language-bash hljs ">vim /etc/vimrc</code></pre>
 
+
+
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 添加</span>
 <span class="hljs-keyword">set</span> number</code></pre>
+
+
 
 <h4 id="安装node环境">安装node环境</h4>
 
@@ -103,6 +149,8 @@ curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.<span class="hljs-n
 
 <span class="hljs-comment"># 安装node</span>
 nvm install v6.<span class="hljs-number">5.0</span></code></pre>
+
+
 
 <h4 id="安装redis">安装redis</h4>
 
@@ -138,6 +186,8 @@ redis-cli
 
 <span class="hljs-comment"># 启动redis server</span>
 redis-server</code></pre>
+
+
 
 <h4 id="开放3000端口">开放3000端口</h4>
 
