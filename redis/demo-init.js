@@ -8,7 +8,7 @@ const failure = (err) => {
     console.error(err);
 };
 
-client.flushallAsync().then(res => {
+client.flushdbAsync().then(res => {
     client.batch([
         [
             'hmset', 'article:hello-world',

@@ -5,8 +5,8 @@ const title = 'NPM提速';
 const subtitle = '解决NPM访问慢的问题';
 const createTime = (new Date(2016, 8, 13) - 0);
 const desc = '解决NPM访问慢的问题';
-const url = '2016/09/12/' + articleId;
-const categories = [{categoryId: 'memo', categoryName: '备忘'}, {categoryId: 'node', categoryName: 'Node'}];
+const url = '/2016/09/12/' + articleId;
+const categories = [{categoryId: 'memo', categoryName: '备忘'}];
 const content = `<p>npm的默认源在国外，如果速度过慢可以切换到国内，这里推荐taobao源。</p>
 
 <h4 id="使用taobao源下载">使用taobao源下载</h4>

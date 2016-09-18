@@ -5,8 +5,8 @@ const title = 'CentOS 7.2 初始化';
 const subtitle = '系统环境配置记录';
 const createTime = (new Date(2016, 8, 12) - 0);
 const desc = '记录服务器初始化过程，步骤繁琐，便于查询。。。';
-const url = '2016/09/12/' + articleId;
-const categories = [{categoryId: 'memo', categoryName: '备忘'}, {categoryId: 'centos', categoryName: 'CentOS'}];
+const url = '/2016/09/12/' + articleId;
+const categories = [{categoryId: 'memo', categoryName: '备忘'}];
 const content = `<h4 id="安装git">安装git</h4>
 
 
