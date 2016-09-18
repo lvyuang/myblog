@@ -10,8 +10,8 @@
     "build": "webpack",
     "build:production": "NODE_ENV=production webpack",
     "redis": "redis-server ./redis.conf",
-    "production": "npm run build:production && NODE_ENV=production pm2 start ./server-node.js",
-    "production:reload": "npm run build:production && pm2 reload all"
+    "production": "npm run build:production && NODE_ENV=production pm2 start ./server-node.js -n lvquanblog.com",
+    "production:reload": "npm run build:production && pm2 reload lvquanblog.com"
   },
   "keywords": [],
   "author": "",
