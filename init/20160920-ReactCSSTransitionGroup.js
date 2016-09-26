@@ -142,7 +142,7 @@ setTimeout(() =&gt; {
 
 <p>更多说明请参见<a href="https://facebook.github.io/react/docs/animation.html">官方文档</a></p>`;
 
-service.remove('React-Page-Transition', (err, res) => {
+service.remove(articleId, (err, res) => {
     console.log(err, res);
 
     service.post(
