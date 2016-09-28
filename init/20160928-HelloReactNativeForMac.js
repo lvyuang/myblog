@@ -64,6 +64,10 @@ const content = `<p>参考 React Native 的官方文档一步步下来，还是�
 
 
 
+<h3 id="安装编译工具">安装编译工具</h3>
+
+<p><img src="/resources/article/20160928-HelloReactNative/5.5.webp" alt="" title=""></p>
+
 <h3 id="安装android虚拟机">安装Android虚拟机</h3>
 
 <p><img src="/resources/article/20160928-HelloReactNative/6.webp" alt="" title=""> <br>
