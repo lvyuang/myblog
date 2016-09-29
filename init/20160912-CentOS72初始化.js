@@ -7,13 +7,15 @@ const createTime = (new Date(2016, 8, 12) - 0);
 const desc = '记录服务器初始化过程，步骤繁琐，便于查询。。。';
 const url = '/2016/09/12/' + articleId;
 const categories = [{categoryId: 'memo', categoryName: '备忘'}];
-const content = `<h4 id="安装git">安装git</h4>
+const content = `<h2 id="安装git">安装git</h2>
 
 
 
 <pre class="prettyprint"><code class="language-bash hljs ">yum install -y git</code></pre>
 
-<h4 id="安装vim">安装vim</h4>
+
+
+<h2 id="安装vim">安装vim</h2>
 
 
 
@@ -21,7 +23,7 @@ const content = `<h4 id="安装git">安装git</h4>
 
 
 
-<h4 id="配置git">配置git</h4>
+<h2 id="配置git">配置git</h2>
 
 
 
@@ -43,7 +45,9 @@ const content = `<h4 id="安装git">安装git</h4>
     <span class="hljs-keyword">editor</span> = vim
     pager = cat</code></pre>
 
-<h4 id="安装zsh">安装zsh</h4>
+
+
+<h2 id="安装zsh">安装zsh</h2>
 
 
 
@@ -57,7 +61,7 @@ logout</code></pre>
 
 
 
-<h4 id="安装oh-my-zsh">安装oh-my-zsh</h4>
+<h2 id="安装oh-my-zsh">安装oh-my-zsh</h2>
 
 
 
@@ -65,7 +69,7 @@ logout</code></pre>
 
 
 
-<h4 id="切换zsh皮肤">切换zsh皮肤</h4>
+<h2 id="切换zsh皮肤">切换zsh皮肤</h2>
 
 
 
@@ -76,12 +80,14 @@ logout</code></pre>
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 修改字段</span>
 ZSH_THEME=<span class="hljs-string">"ys"</span></code></pre>
 
+
+
 <pre class="prettyprint"><code class="language-bash hljs "><span class="hljs-comment"># 重新登录</span>
 logout</code></pre>
 
 
 
-<h4 id="添加用户和默认组wheel">添加用户和默认组(wheel)</h4>
+<h2 id="添加用户和默认组wheel">添加用户和默认组(wheel)</h2>
 
 
 
@@ -89,7 +95,7 @@ logout</code></pre>
 
 
 
-<h4 id="设置用户密码">设置用户密码</h4>
+<h2 id="设置用户密码">设置用户密码</h2>
 
 
 
@@ -97,7 +103,7 @@ logout</code></pre>
 
 
 
-<h4 id="设置免密码ssh登录">设置免密码ssh登录</h4>
+<h2 id="设置免密码ssh登录">设置免密码ssh登录</h2>
 
 
 
@@ -114,7 +120,7 @@ chmod <span class="hljs-number">600</span> ~/.ssh/authorized_keys</code></pre>
 
 
 
-<h4 id="设置免密码sudo">设置免密码sudo</h4>
+<h2 id="设置免密码sudo">设置免密码sudo</h2>
 
 
 
@@ -127,7 +133,7 @@ wheel ALL=(ALL) NOPASSWD: ALL</code></pre>
 
 
 
-<h4 id="显示vim行号">显示vim行号</h4>
+<h2 id="显示vim行号">显示vim行号</h2>
 
 
 
@@ -140,7 +146,7 @@ wheel ALL=(ALL) NOPASSWD: ALL</code></pre>
 
 
 
-<h4 id="安装node环境">安装node环境</h4>
+<h2 id="安装node环境">安装node环境</h2>
 
 
 
@@ -152,7 +158,7 @@ nvm install v6.<span class="hljs-number">5.0</span></code></pre>
 
 
 
-<h4 id="安装redis">安装redis</h4>
+<h2 id="安装redis">安装redis</h2>
 
 
 
@@ -189,13 +195,27 @@ redis-server</code></pre>
 
 
 
-<h4 id="开放3000端口">开放3000端口</h4>
+<h2 id="防火墙设置">防火墙设置</h2>
+
+<p>首先开启 ip masquerade</p>
+
+<pre class="prettyprint"><code class="language-bash hljs ">firewall-cmd --permanent --add-masquerade</code></pre>
+
+<p>开放80端口</p>
+
+<pre class="prettyprint"><code class="language-bash hljs ">firewall-cmd --permanent --add-port=<span class="hljs-number">80</span>/tcp</code></pre>
+
+<p>转发到3000端口</p>
 
 
 
-<pre class="prettyprint"><code class="language-bash hljs ">firewall-cmd --zone=public --add-port=<span class="hljs-number">3000</span>/tcp --permanent
+<pre class="prettyprint"><code class="language-bash hljs ">firewall-cmd --permanent --add-forward-port=port=<span class="hljs-number">80</span>:proto=tcp:toport=<span class="hljs-number">3000</span></code></pre>
 
-firewall-cmd --reload</code></pre>`;
+<p>重启防火墙</p>
+
+
+
+<pre class="prettyprint"><code class="language-bash hljs ">firewall-cmd --reload</code></pre>`;
 
 service.remove(articleId, (err, res) => {
     console.log(err, res);
