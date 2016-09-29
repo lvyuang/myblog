@@ -22,7 +22,16 @@ export default (props) =>
         </div>
         <footer>
             <div className="container">
-                © 2016 LQ Research Center . All rights reserved.
+                <div className="left">
+                    © 2016 LQ Research Center . All rights reserved.
+                </div>
+                <div className="right">
+                    <a href="mailto:yuang2008@gmail.com">联系我</a>
+                    <a target="_blank" href="https://github.com/lvyuang/myblog">本站源码</a>
+                </div>
+                <div className="beian">
+                    <a target="_blank" href="http://www.miitbeian.gov.cn/"><li className="fa fa-shield"></li>京ICP备16049711号</a>
+                </div>
             </div>
         </footer>
     </div>

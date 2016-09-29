@@ -90,12 +90,47 @@
 
     footer {
         background-color: #2D2F38;
-        padding: 15px 0;
         color: rgba(255, 255, 255, .7);
         text-align: center;
+        height: 5rem;
+        position: relative;
 
         .container {
-            padding: 0 15px;
+            .left, .right {
+                position: absolute;
+                top: 1rem;
+            }
+
+            .left {
+                left: 0;
+            }
+
+            .right {
+                right: 0;
+
+                a {
+                    color: rgba(255, 255, 255, .7);
+                    margin-left: 1rem;
+
+                    &:hover {
+                        color: #00ab6b;
+                    }
+                }
+            }
+
+            .beian {
+                position: absolute;
+                top: 3rem;
+                left: 0;
+
+                a {
+                    color: rgba(255, 255, 255, .7);
+
+                    &:hover {
+                        color: #00ab6b;
+                    }
+                }
+            }
         }
     }
 }
